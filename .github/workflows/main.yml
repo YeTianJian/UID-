@@ -1,38 +1,37 @@
-name: Build UID Filter
+名称: 构建 UID 筛选器
 on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
+推送:
+分支: [main]
+ 工作流调度:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v4
+运行于: windows-latest
+步骤:
+      - 名称: 检出源
+使用: actions/checkout@v4
 
-      - name: Setup Python 3.10
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
+      - 名称: 设置 Python 3.10
+使用: actions/setup-python@v5
+使用:
+Python 版本: "3.10"
 
-      - name: Setup Android SDK & NDK 27.3.13750724
-        uses: android-actions/setup-android@v3
-        with:
-          packages: "ndk;27.3.13750724"
+      - 名称: 设置 Android SDK 和 NDK 27.3.13750724
+使用: android-actions/setup-android@v3
+使用:
+软件包: "ndk;27.3.13750724"
           accept-android-sdk-licenses: true
 
-      - name: Set environment variable
-        run: |
-          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/27.3.13750724" >> $GITHUB_ENV
+      - 名称: 设置环境
+运行: |
+          echo "ANDROID_NDK_HOME=$env:ANDROID_SDK_ROOT\ndk\27.3.13750724" >> $env:GITHUB_ENV
 
-      - name: Run build script
-        run: |
-          chmod +x tools/uid-seccomp-mod || true
-          python3 tools/uid-seccomp-mod
+      - 名称: 运行构建脚本
+运行: |
+          python tools/uid-seccomp-mod
 
-      - name: Upload built zip artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: UID-Zygisk-Mod
-          path: build/**/*.zip
+      -名称：上传已构建的 zip 构建产物
+使用：actions/upload-artifact@v4
+参数：
+名称：UID-Zygisk-Mod
+路径：build/**/*.zip
