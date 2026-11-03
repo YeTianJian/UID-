@@ -1,0 +1,38 @@
+name: Build UID Filter
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Setup Android SDK & NDK 27.3.13750724
+        uses: android-actions/setup-android@v3
+        with:
+          packages: "ndk;27.3.13750724"
+          accept-android-sdk-licenses: true
+
+      - name: Set environment variable
+        run: |
+          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/27.3.13750724" >> $GITHUB_ENV
+
+      - name: Run build script
+        run: |
+          chmod +x tools/uid-seccomp-mod || true
+          python3 tools/uid-seccomp-mod
+
+      - name: Upload built zip artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: UID-Zygisk-Mod
+          path: build/**/*.zip
